@@ -78,7 +78,7 @@ public class TheIntroDbSegmentProvider : IMediaSegmentProvider
         Debug.Assert(request.ItemId != Guid.Empty, "Media segment request should contain an item id.");
 
         var config = GelatoPlugin.Instance?.Configuration;
-        if (config?.IntroDbProvider == IntroDbProvider.IntroDB)
+        if (config?.IntroDbProvider != IntroDbProvider.TheIntroDB)
         {
             return Array.Empty<MediaSegmentDto>();
         }
