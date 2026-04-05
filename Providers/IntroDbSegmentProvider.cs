@@ -280,9 +280,9 @@ public class IntroDbSegmentProvider : IMediaSegmentProvider
             }
 
             if (
-                episode.RunTimeTicks is > 0 &&
-                endTicks > episode.RunTimeTicks.Value &&
-                result.EndSeconds >= 0
+                episode.RunTimeTicks is > 0
+                && endTicks > episode.RunTimeTicks.Value
+                && result.EndSeconds >= 0
             )
             {
                 _logger.LogWarning(

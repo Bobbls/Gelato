@@ -139,8 +139,8 @@ public sealed class JikanClient
         foreach (var anime in results)
         {
             if (
-                string.Equals(anime.Title, normalizedQuery, StringComparison.OrdinalIgnoreCase) ||
-                string.Equals(anime.TitleEnglish, normalizedQuery, StringComparison.OrdinalIgnoreCase)
+                string.Equals(anime.Title, normalizedQuery, StringComparison.OrdinalIgnoreCase)
+                || string.Equals(anime.TitleEnglish, normalizedQuery, StringComparison.OrdinalIgnoreCase)
             )
             {
                 return anime.MalId;
