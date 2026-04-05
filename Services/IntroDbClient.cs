@@ -250,13 +250,26 @@ public sealed class IntroDbClient
             return null;
         }
 
-        var startMs = intro.StartMs;
-        var endMs = intro.EndMs ?? -1;
-        if (endMs <= startMs || startMs < 0)
+        // null start_ms means the intro begins at the start of the episode
+        var startMs = intro.StartMs ?? 0L;
+
+        // null end_ms means the segment runs to the end of the episode; we can't
+        // resolve that here without episode duration, so skip it
+        if (intro.EndMs is null)
+        {
+            _logger.LogDebug(
+                "TheIntroDB intro for {ImdbId} S{Season}E{Episode} has no end time; skipping.",
+                imdbId, seasonNumber, episodeNumber
+            );
+            return null;
+        }
+
+        var endMs = intro.EndMs.Value;
+        if (endMs <= startMs)
         {
             _logger.LogWarning(
-                "TheIntroDB returned invalid intro timing for {ImdbId} S{Season}E{Episode}.",
-                imdbId, seasonNumber, episodeNumber
+                "TheIntroDB returned invalid intro timing for {ImdbId} S{Season}E{Episode}: {StartMs}-{EndMs}ms.",
+                imdbId, seasonNumber, episodeNumber, startMs, endMs
             );
             return null;
         }
@@ -316,7 +329,7 @@ public sealed class IntroDbClient
     private sealed class TheIntroDbSegment
     {
         [JsonPropertyName("start_ms")]
-        public long StartMs { get; set; }
+        public long? StartMs { get; set; }
 
         [JsonPropertyName("end_ms")]
         public long? EndMs { get; set; }
