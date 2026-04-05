@@ -107,6 +107,10 @@ public sealed class IntroDbClient
         var config = GelatoPlugin.Instance?.Configuration;
         if (config?.IntroDbProvider == IntroDbProvider.TheIntroDB)
         {
+            _logger.LogInformation(
+                "Routing intro lookup to TheIntroDB for {ImdbId} S{Season}E{Episode}.",
+                imdbId, seasonNumber, episodeNumber
+            );
             return await GetIntroFromTheIntroDbAsync(
                 imdbId, seasonNumber, episodeNumber, config.IntroDbApiKey, cancellationToken
             ).ConfigureAwait(false);
@@ -273,6 +277,11 @@ public sealed class IntroDbClient
             );
             return null;
         }
+
+        _logger.LogInformation(
+            "TheIntroDB returned intro for {ImdbId} S{Season}E{Episode}: {StartMs}-{EndMs}ms.",
+            imdbId, seasonNumber, episodeNumber, startMs, endMs
+        );
 
         return new IntroDbIntroResult(
             imdbId,
