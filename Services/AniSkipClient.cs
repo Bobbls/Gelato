@@ -21,7 +21,9 @@ namespace Gelato.Services;
 /// </summary>
 public sealed class AniSkipClient
 {
-    /// <summary>Default timeout for AniSkip requests, in seconds.</summary>
+    /// <summary>
+    /// Default timeout for AniSkip requests, in seconds.
+    /// </summary>
     public const int DefaultTimeoutSeconds = 10;
 
     private const string BaseUrl = "https://api.aniskip.com/v2";

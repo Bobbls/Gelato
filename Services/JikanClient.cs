@@ -16,11 +16,13 @@ namespace Gelato.Services;
 
 /// <summary>
 /// Client for looking up MyAnimeList IDs via the Jikan API (api.jikan.moe).
-/// Searches by anime title and caches results to respect Jikan's rate limits.
+/// Performs a live title search on each call.
 /// </summary>
 public sealed class JikanClient
 {
-    /// <summary>Default timeout for Jikan requests, in seconds.</summary>
+    /// <summary>
+    /// Default timeout for Jikan requests, in seconds.
+    /// </summary>
     public const int DefaultTimeoutSeconds = 10;
 
     private const string BaseUrl = "https://api.jikan.moe/v4";
@@ -54,7 +56,6 @@ public sealed class JikanClient
 
     /// <summary>
     /// Look up the MyAnimeList ID for an anime series by title.
-    /// Results are cached in memory for the lifetime of the plugin.
     /// </summary>
     /// <param name="seriesTitle">The series title to search for.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
@@ -75,7 +76,7 @@ public sealed class JikanClient
             .SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken)
             .ConfigureAwait(false);
 
-        if (response.StatusCode == HttpStatusCode.NotFound || response.StatusCode == HttpStatusCode.TooManyRequests)
+        if (response.StatusCode is HttpStatusCode.NotFound or HttpStatusCode.TooManyRequests)
         {
             _logger.LogDebug(
                 "Jikan returned {Status} for title '{Title}'.",
